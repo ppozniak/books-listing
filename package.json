@@ -1,0 +1,31 @@
+{
+  "name": "books-listing",
+  "version": "0.0.1",
+  "description": "A small book listing app",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Patryk Pozniak <ppozniak95@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "7.3.1",
+    "eslint-config-google": "0.14.0",
+    "eslint-config-prettier": "6.11.0",
+    "eslint-plugin-jest": "23.17.1",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "7.20.0",
+    "husky": "4.2.5",
+    "prettier": "2.0.5",
+    "lint-staged": "10.2.11"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
+  }
+}
