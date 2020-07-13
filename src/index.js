@@ -1,5 +1,7 @@
 import React from "react";
 import { render } from "react-dom";
+import AppContainer from "./containers/AppContainer";
+import "./styles/global-styles.scss";
 
-const appContainer = document.getElementById("root");
-render(<div>I like potatoes</div>, appContainer);
+const appRootNode = document.getElementById("root");
+render(<AppContainer />, appRootNode);
