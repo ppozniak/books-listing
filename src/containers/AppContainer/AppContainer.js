@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { createBrowserHistory } from "history";
+const history = createBrowserHistory();
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -15,9 +17,12 @@ import { fetchBooks } from "../../api";
 const BOOKS_PER_PAGE = 8;
 
 const AppContainer = () => {
+  const params = new URLSearchParams(history.location.search);
+  const queryPage = params.get("page");
+
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(Number(queryPage) || 1);
   const [numberOfPages, setNumberOfPages] = useState();
 
   useEffect(() => {
@@ -43,6 +48,7 @@ const AppContainer = () => {
   }, [currentPage, BOOKS_PER_PAGE]);
 
   const handlePageSelect = (pageNumber) => {
+    history.push(`?page=${pageNumber}`);
     setCurrentPage(pageNumber);
   };
 
