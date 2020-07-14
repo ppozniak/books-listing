@@ -2,10 +2,10 @@ import React, { useEffect, useState, useMemo } from "react";
 import debounce from "lodash.debounce";
 import { createBrowserHistory } from "history";
 const history = createBrowserHistory();
+import NProgress from "nprogress";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Spinner from "react-bootstrap/Spinner";
 import Fade from "react-bootstrap/Fade";
 
 import PageHeader from "../../components/PageHeader";
@@ -32,6 +32,7 @@ const AppContainer = () => {
     /** Fetches list of  books */
     async function getBooks() {
       try {
+        NProgress.start();
         setLoading(true);
         const { data } = await fetchBooks({
           itemsPerPage: BOOKS_PER_PAGE,
@@ -53,6 +54,7 @@ const AppContainer = () => {
         console.error(error);
       } finally {
         setLoading(false);
+        NProgress.done();
       }
     }
 
@@ -82,20 +84,12 @@ const AppContainer = () => {
       <PageHeader title="Books 📚">
         <Filter onChange={handleFilterChange} />
       </PageHeader>
-      <Container as="main" className="pt-6">
+      <Container as="main" className="pt-6" style={{ position: "relative" }}>
         <Fade in={!loading}>
           <Row xs={1} sm={2} md={3} lg={4} className="mt-3">
             <BooksListing books={books} />
           </Row>
         </Fade>
-
-        {loading && (
-          <Row>
-            <Spinner animation="border" role="status" className="mx-auto my-5">
-              <span className="sr-only">Loading books. Please wait</span>
-            </Spinner>
-          </Row>
-        )}
 
         {!loading &&
           filter &&
