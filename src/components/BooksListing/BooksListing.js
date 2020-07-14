@@ -8,7 +8,14 @@ import BookItem from "./BookItem";
 const BooksListing = ({ books = [] }) => {
   return books.map((book) => (
     <Col className="mb-3" key={book.id}>
-      <BookItem title={book.title} />
+      <BookItem
+        title={book.book_title}
+        pagesCount={book.book_pages}
+        city={book.book_publication_city}
+        country={book.book_publication_city}
+        year={book.book_publication_year}
+        authors={book.book_author}
+      />
     </Col>
   ));
 };
