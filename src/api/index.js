@@ -18,9 +18,14 @@ const URLS = {
  * @return {Promise} a list of books
  */
 export function fetchBooks({ page, itemsPerPage, filter } = {}) {
-  return post(URLS.books, {
+  const body = {
     page,
     itemsPerPage,
-    filter,
-  });
+  };
+
+  if (filter) {
+    body.filters = [{ type: "all", values: [filter] }];
+  }
+
+  return post(URLS.books, body);
 }

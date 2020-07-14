@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import debounce from "lodash.debounce";
 import { createBrowserHistory } from "history";
 const history = createBrowserHistory();
 
@@ -15,6 +16,7 @@ import ListingPagination from "../../components/ListingPagination";
 import { fetchBooks } from "../../api";
 
 const BOOKS_PER_PAGE = 8;
+const FILTER_DEBOUNCE_MS = 300;
 
 const AppContainer = () => {
   const params = new URLSearchParams(history.location.search);
@@ -23,6 +25,7 @@ const AppContainer = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(Number(queryPage) || 1);
+  const [filter, setFilter] = useState();
   const [numberOfPages, setNumberOfPages] = useState();
 
   useEffect(() => {
@@ -33,6 +36,7 @@ const AppContainer = () => {
         const { data } = await fetchBooks({
           itemsPerPage: BOOKS_PER_PAGE,
           page: currentPage,
+          filter,
         });
 
         setNumberOfPages(Math.ceil(data.count / BOOKS_PER_PAGE));
@@ -45,17 +49,30 @@ const AppContainer = () => {
     }
 
     getBooksOnMount();
-  }, [currentPage, BOOKS_PER_PAGE]);
+  }, [currentPage, BOOKS_PER_PAGE, filter]);
 
   const handlePageSelect = (pageNumber) => {
     history.push(`?page=${pageNumber}`);
     setCurrentPage(pageNumber);
   };
 
+  const handleFilterChange = useMemo(() => {
+    const debounced = debounce((event) => {
+      setFilter(event.target.value);
+      setCurrentPage(1);
+      history.push(`?page=1`);
+    }, FILTER_DEBOUNCE_MS);
+
+    return (event) => {
+      event.persist();
+      return debounced(event);
+    };
+  });
+
   return (
     <>
       <PageHeader title="Books 📚">
-        <Filter />
+        <Filter onChange={handleFilterChange} />
       </PageHeader>
       <Container as="main" className="pt-6">
         <Fade in={!loading}>
@@ -71,6 +88,11 @@ const AppContainer = () => {
             </Spinner>
           </Row>
         )}
+
+        {!loading &&
+          filter &&
+          !books.length &&
+          "No items found for given search."}
 
         <ListingPagination
           numberOfPages={numberOfPages}
