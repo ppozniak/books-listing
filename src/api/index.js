@@ -17,6 +17,10 @@ const URLS = {
  * Fetches a list of books
  * @return {Promise} a list of books
  */
-export function getBooks() {
-  return post(URLS.books);
+export function fetchBooks({ page, itemsPerPage, filter } = {}) {
+  return post(URLS.books, {
+    page,
+    itemsPerPage,
+    filter,
+  });
 }

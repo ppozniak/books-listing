@@ -3,7 +3,12 @@ module.exports = {
     browser: true,
     es2020: true,
   },
-  extends: ["plugin:react/recommended", "google", "prettier"],
+  extends: [
+    "plugin:react/recommended",
+    "google",
+    "prettier",
+    "plugin:jest-dom/recommended",
+  ],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -11,7 +16,7 @@ module.exports = {
     ecmaVersion: 11,
     sourceType: "module",
   },
-  plugins: ["react", "prettier", "jest"],
+  plugins: ["react", "prettier", "jest", "jest-dom"],
   rules: {
     "prettier/prettier": "error",
     "linebreak-style": ["error", "unix"],
