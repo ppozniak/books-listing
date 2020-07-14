@@ -29,8 +29,8 @@ const AppContainer = () => {
   const [numberOfPages, setNumberOfPages] = useState();
 
   useEffect(() => {
-    /** Fetches books immediately on mounting */
-    async function getBooksOnMount() {
+    /** Fetches list of  books */
+    async function getBooks() {
       try {
         setLoading(true);
         const { data } = await fetchBooks({
@@ -39,7 +39,15 @@ const AppContainer = () => {
           filter,
         });
 
-        setNumberOfPages(Math.ceil(data.count / BOOKS_PER_PAGE));
+        const newNumberOfPages = Math.ceil(data.count / BOOKS_PER_PAGE);
+        setNumberOfPages(newNumberOfPages);
+
+        // Handling of query param being bigger than max number of pages
+        if (currentPage > newNumberOfPages) {
+          setCurrentPage(newNumberOfPages);
+          history.push(`?page=${newNumberOfPages}`);
+        }
+
         setBooks(data.books);
       } catch (error) {
         console.error(error);
@@ -48,7 +56,7 @@ const AppContainer = () => {
       }
     }
 
-    getBooksOnMount();
+    getBooks();
   }, [currentPage, BOOKS_PER_PAGE, filter]);
 
   const handlePageSelect = (pageNumber) => {
